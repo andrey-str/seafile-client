@@ -36,8 +36,8 @@ static const NSArray *const kBadgetIdentifiers = @[
 // Set up images for our badge identifiers. For demonstration purposes,
 static void initializeBadgeImages() {
     // Set up images for our badge identifiers. For demonstration purposes,
-    // this
-    // uses off-the-shelf images.
+    // NONE,
+    // @""
     // SYNCING,
     [[FIFinderSyncController defaultController]
              setBadgeImage:[NSImage imageNamed:@"status-syncing.icns"]
@@ -65,6 +65,14 @@ inline static void setBadgeIdentifierFor(NSURL *url, PathStatus status) {
     [[FIFinderSyncController defaultController]
         setBadgeIdentifier:kBadgetIdentifiers[status]
                     forURL:url];
+}
+
+inline static void setBadgeIdentifierFor(const std::string &path,
+                                         PathStatus status) {
+    setBadgeIdentifierFor(
+        [NSURL fileURLWithPath:[NSString stringWithUTF8String:path.c_str()]
+                   isDirectory:YES],
+        status);
 }
 
 inline static void setBadgeIdentifierFor(const std::string &worktree,
@@ -121,6 +129,11 @@ findRepoContainPath(const std::vector<LocalRepo> &repos,
 static void inline cleanRepoFileStatus(
     const std::string &repo_worktree,
     const std::map<std::string, PathStatus> &repo_status) {
+
+    // clean up root
+    setBadgeIdentifierFor(repo_worktree, PathStatus::SYNC_STATUS_NONE);
+
+    // clean up leafs
     for (const auto &file : repo_status) {
         setBadgeIdentifierFor(repo_worktree, file.first,
                               PathStatus::SYNC_STATUS_NONE);
@@ -163,25 +176,20 @@ static void cleanFileStatus(
     }
 }
 
-// TODO use an array to implement it
 static inline PathStatus convertToPathStatus(LocalRepo::SyncState status) {
-    PathStatus retval;
-    switch (status) {
-    case LocalRepo::SYNC_STATE_ING:
-        retval = PathStatus::SYNC_STATUS_SYNCING;
-        break;
-    case LocalRepo::SYNC_STATE_INIT:
-    case LocalRepo::SYNC_STATE_DONE:
-        retval = PathStatus::SYNC_STATUS_SYNCED;
-        break;
-    case LocalRepo::SYNC_STATE_ERROR:
-        retval = PathStatus::SYNC_STATUS_ERROR;
-        break;
-    case LocalRepo::SYNC_STATE_UNKNOWN:
-    default:
-        retval = PathStatus::SYNC_STATUS_NONE;
-    }
-    return retval;
+    static PathStatus convertor[] = {
+        PathStatus::SYNC_STATUS_NONE /* SYNC_STATE_DISABLED = 0 */,
+        PathStatus::SYNC_STATUS_SYNCED /* SYNC_STATE_WAITING = 1 */,
+        PathStatus::SYNC_STATUS_SYNCED /* SYNC_STATE_INIT = 2*/,
+        PathStatus::SYNC_STATUS_SYNCING /* SYNC_STATE_ING = 3*/,
+        PathStatus::SYNC_STATUS_SYNCED /* SYNC_STATE_DONE = 4*/,
+        PathStatus::SYNC_STATUS_ERROR /* SYNC_STATE_ERROR = 5*/,
+        PathStatus::SYNC_STATUS_NONE /* SYNC_STATE_UNKNOWN = 6*/,
+        PathStatus::SYNC_STATUS_NONE /* SYNC_STATE_UNSET = 7*/,
+    };
+    if (status >= LocalRepo::MAX_SYNC_STATE)
+        return PathStatus::SYNC_STATUS_NONE;
+    return convertor[status];
 }
 
 static std::vector<LocalRepo> watched_repos_;
@@ -389,8 +397,7 @@ static constexpr double kGetFileStatusInterval = 2.0; // seconds
     // overwrite the old watch set
     watched_repos_ = std::move(new_watched_repos);
     for (const auto &repo : watched_repos_) {
-        setBadgeIdentifierFor(repo.worktree, "/",
-                              convertToPathStatus(repo.status));
+        setBadgeIdentifierFor(repo.worktree, convertToPathStatus(repo.status));
     }
 
     // update FIFinderSyncController's directory URLs
