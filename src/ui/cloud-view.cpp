@@ -25,8 +25,10 @@ extern "C" {
 #include "server-status-dialog.h"
 #include "main-window.h"
 #include "repos-tab.h"
-#include "starred-files-tab.h"
-#include "activities-tab.h"
+//#include "starred-files-tab.h"
+#include "renders-tab.h"
+#include "new-render-tab.h"
+//#include "activities-tab.h"
 #include "account-view.h"
 #include "seafile-tab-widget.h"
 #include "utils/paint-utils.h"
@@ -145,28 +147,33 @@ void CloudView::createTabs()
     QString base_icon_path = ":/images/tabs/";
     tabs_->addTab(repos_tab_, tr("Libraries"), base_icon_path + "files.png");
 
-    starred_files_tab_ = new StarredFilesTab;
-    tabs_->addTab(starred_files_tab_, tr("Starred"), base_icon_path + "starred.png");
+    //starred_files_tab_ = new StarredFilesTab;
+    //tabs_->addTab(starred_files_tab_, tr("Starred"), base_icon_path + "starred.png");
+    renders_tab_ = new RendersTab;
+    tabs_->addTab(renders_tab_, tr("Renders"), base_icon_path + "renders.png");
 
-    activities_tab_ = new ActivitiesTab;
+    //activities_tab_ = new ActivitiesTab;
+    new_render_tab_ = new NewRenderTab;
+    tabs_->addTab(new_render_tab_, tr("New Renderer"), base_icon_path + "new_render.png");
+    tabs_->adjustTabsWidth(rect().width());
 
     connect(tabs_, SIGNAL(currentTabChanged(int)),
             this, SLOT(onTabChanged(int)));
 
-    bool has_pro_account = hasAccount() && seafApplet->accountManager()->accounts().front().isPro();
-    if (has_pro_account) {
-        addActivitiesTab();
-    }
+//    bool has_pro_account = hasAccount() && seafApplet->accountManager()->accounts().front().isPro();
+//    if (has_pro_account) {
+//        addActivitiesTab();
+//    }
 }
 
-void CloudView::addActivitiesTab()
-{
-    if (tabs_->count() < 3) {
-        QString base_icon_path = ":/images/tabs/";
-        tabs_->addTab(activities_tab_, tr("Activities"), base_icon_path + "history.png");
-        tabs_->adjustTabsWidth(rect().width());
-    }
-}
+//void CloudView::addActivitiesTab()
+//{
+//    if (tabs_->count() < 3) {
+//        QString base_icon_path = ":/images/tabs/";
+//        tabs_->addTab(activities_tab_, tr("Activities"), base_icon_path + "history.png");
+//        tabs_->adjustTabsWidth(rect().width());
+//    }
+//}
 
 void CloudView::setupDropArea()
 {
@@ -424,9 +431,11 @@ void CloudView::onRefreshClicked()
     if (tabs_->currentIndex() == TAB_INDEX_REPOS) {
         repos_tab_->refresh();
     } else if (tabs_->currentIndex() == TAB_INDEX_STARRED_FILES) {
-        starred_files_tab_->refresh();
+        //starred_files_tab_->refresh();
+        renders_tab_->refresh();
     } else if (tabs_->currentIndex() == TAB_INDEX_ACTIVITIES) {
-        activities_tab_->refresh();
+        //activities_tab_->refresh();
+        new_render_tab_->refresh();
     }
 }
 
@@ -441,16 +450,18 @@ void CloudView::onAccountChanged()
 {
     refresh_action_->setEnabled(hasAccount());
 
-    tabs_->removeTab(2, activities_tab_);
-    bool has_pro_account = hasAccount() && seafApplet->accountManager()->accounts().front().isPro();
-    if (has_pro_account) {
-        addActivitiesTab();
-    }
-    tabs_->adjustTabsWidth(rect().width());
+//    tabs_->removeTab(2, activities_tab_);
+//    bool has_pro_account = hasAccount() && seafApplet->accountManager()->accounts().front().isPro();
+//    if (has_pro_account) {
+//        addActivitiesTab();
+//    }
+//    tabs_->adjustTabsWidth(rect().width());
 
     repos_tab_->refresh();
-    starred_files_tab_->refresh();
-    activities_tab_->refresh();
+    //starred_files_tab_->refresh();
+    //activities_tab_->refresh();
+    renders_tab_->refresh();
+    new_render_tab_->refresh();
 
     account_view_->onAccountChanged();
 }

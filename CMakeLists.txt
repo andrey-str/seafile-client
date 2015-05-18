@@ -120,10 +120,10 @@ ENDIF()
 
 IF(USE_QT5)
     SET(USE_QT_LIBRARIES
-      Core Gui Widgets LinguistTools Network Test
+      Core Gui Widgets LinguistTools Network Test WebKit WebKitWidgets
       )
+
     IF (BUILD_SHIBBOLETH_SUPPORT)
-      SET(USE_QT_LIBRARIES ${USE_QT_LIBRARIES} "WebKit" "WebKitWidgets")
       ADD_DEFINITIONS(-DHAVE_SHIBBOLETH_SUPPORT)
     ENDIF()
     IF (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -203,7 +203,10 @@ SET(moc_headers
   src/ui/tab-view.h
   src/ui/loading-view.h
   src/ui/repos-tab.h
+  src/ui/renders-tab.h
+  src/ui/new-render-tab.h
   src/ui/starred-files-tab.h
+  src/ui/renders-tab.h
   src/ui/starred-files-list-view.h
   src/ui/starred-files-list-model.h
   src/ui/starred-file-item-delegate.h
@@ -384,6 +387,8 @@ SET(seafile_client_sources
   src/ui/tab-view.cpp
   src/ui/loading-view.cpp
   src/ui/repos-tab.cpp
+  src/ui/renders-tab.cpp
+  src/ui/new-render-tab.cpp
   src/ui/starred-files-tab.cpp
   src/ui/starred-files-list-view.cpp
   src/ui/starred-files-list-model.cpp
@@ -701,7 +706,7 @@ TARGET_LINK_LIBRARIES(seafile-applet
 )
 
 IF(USE_QT5)
-  QT5_USE_MODULES(seafile-applet Core Gui Widgets Network)
+  QT5_USE_MODULES(seafile-applet Core Gui Widgets Network WebKit WebKitWidgets)
   IF (BUILD_SHIBBOLETH_SUPPORT)
     QT5_USE_MODULES(seafile-applet WebKit WebKitWidgets)
   ENDIF()

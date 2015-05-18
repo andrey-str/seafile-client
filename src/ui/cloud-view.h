@@ -14,8 +14,10 @@ class QTabWidget;
 
 class SeafileTabWidget;
 class ReposTab;
-class StarredFilesTab;
-class ActivitiesTab;
+//class StarredFilesTab;
+class RendersTab;
+class NewRenderTab;
+//class ActivitiesTab;
 class CloneTasksDialog;
 class AccountView;
 
@@ -75,8 +77,12 @@ private:
 
     SeafileTabWidget *tabs_;
     ReposTab *repos_tab_;
-    StarredFilesTab *starred_files_tab_;
-    ActivitiesTab *activities_tab_;
+
+    //StarredFilesTab *starred_files_tab_;
+    RendersTab * renders_tab_;
+
+    //ActivitiesTab *activities_tab_;
+    NewRenderTab * new_render_tab_;
 
     QSizeGrip *resizer_;
 

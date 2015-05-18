@@ -93,6 +93,13 @@
     <file>images/download-48.png</file>
     <file>images/tabs/files.png</file>
     <file>images/tabs/files@2x.png</file>
+
+    <file>images/tabs/renders.png</file>
+    <file>images/tabs/renders@2x.png</file>
+
+    <file>images/tabs/new_render.png</file>
+    <file>images/tabs/new_render@2x.png</file>
+
     <file>images/tabs/history.png</file>
     <file>images/tabs/history@2x.png</file>
     <file>images/tabs/starred.png</file>
