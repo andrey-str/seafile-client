@@ -13,7 +13,7 @@
 #include <vector>
 
 #if defined(Q_OS_WIN32)
-#include <ShlObj.h>
+#include <shlobj.h>
 #include <shlwapi.h>
 #endif
 

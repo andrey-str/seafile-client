@@ -44,7 +44,7 @@ struct UserData {
 //
 // send message synchronously
 //
-void sendOnceCallback(int sock, short what, void* data)
+void sendOnceCallback(long long int sock, short what, void* data)
 {
     UserData *user_data = static_cast<UserData*>(data);
     _CcnetClient *sync_client = user_data->ccnet_client;
@@ -63,7 +63,7 @@ void sendOnceCallback(int sock, short what, void* data)
     ccnet_message_free(syn_message);
 }
 
-void readCallback(int sock, short what, void* data)
+void readCallback(long long int sock, short what, void* data)
 {
     UserData *user_data = static_cast<UserData*>(data);
     if (ccnet_client_read_input(user_data->ccnet_client) <= 0) {
