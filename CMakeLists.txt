@@ -28,6 +28,7 @@ IF (APPLE)
     OPTION(USE_QT5
       "Build seafile-client against Qt5 instead" ON)
 ELSE ()
+   cmake_policy(SET CMP0020 NEW)
     OPTION(USE_QT5
       "Build seafile-client against Qt5 instead" OFF)
 ENDIF ()
