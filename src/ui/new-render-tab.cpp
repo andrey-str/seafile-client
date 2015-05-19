@@ -21,12 +21,12 @@ enum {
 
 NewRenderTab::NewRenderTab(QWidget *parent): TabView(parent) {
 
-    createWebKitView();
+//    createWebKitView();
 
-    QUrl url = QUrl("http://www.rambler.ru");
-    _webView->load(url);
+//    QUrl url = QUrl("http://www.rambler.ru");
+//    _webView->load(url);
 
-    mStack->insertWidget(INDEX_WEB_VIEW, _webViewWidget);
+//    mStack->insertWidget(INDEX_WEB_VIEW, _webViewWidget);
 
 }
 
@@ -49,7 +49,7 @@ void NewRenderTab::startRefresh() {
 
 void NewRenderTab::refresh() {
 
-    _webView->reload();
+  //  _webView->reload();
 }
 
 void NewRenderTab::stopRefresh() {
